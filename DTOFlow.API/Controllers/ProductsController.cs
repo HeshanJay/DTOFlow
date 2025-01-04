@@ -1,6 +1,7 @@
 ﻿using DTOFlow.API.Data;
 using DTOFlow.API.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DTOFlow.API.Controllers
 {
@@ -17,10 +18,10 @@ namespace DTOFlow.API.Controllers
 
         //Get all products
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             //Get data from database (Domain model)
-            var productsDomain = dbContext.Products.ToList();
+            var productsDomain = await dbContext.Products.ToListAsync();
 
             //Map Domain Models to DTOs
             var productsDto = new List<ProductDto>();
@@ -43,10 +44,10 @@ namespace DTOFlow.API.Controllers
         //Get a single product
         [HttpGet]
         [Route("{id:Guid}")]
-        public IActionResult GetById([FromRoute] Guid id)
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             //Get data from database (Domain model)
-            var productDomain = dbContext.Products.FirstOrDefault(x => x.Id == id);
+            var productDomain = await dbContext.Products.FirstOrDefaultAsync(x => x.Id == id);
 
             if (productDomain == null)
             {
